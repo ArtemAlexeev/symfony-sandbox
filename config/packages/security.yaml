@@ -41,8 +41,8 @@ security:
 
     # Note: Only the *first* matching rule is applied
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
         - { path: ^/profile, roles: ROLE_USER }
+        - { path: ^/api, roles: ROLE_USER }
     role_hierarchy:
         ROLE_STAFF: ROLE_USER
         ROLE_LEAD: [ROLE_STAFF]

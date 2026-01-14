@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Shared\Infrastructure\Rest\Controller;
+namespace App\Shared\Infrastructure\EntryPoints\Http\Web;
 
 use App\Domain\Entity\User;
 use App\Shared\Infrastructure\Form\RegistrationFormType;

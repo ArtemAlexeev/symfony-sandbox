@@ -4,7 +4,7 @@ namespace App\Domain\Entity;
 
 use App\Domain\Enum\User\Gender;
 use App\Domain\Enum\User\Status;
-use App\Infrastructure\Repository\ProfileRepository;
+use App\Infrastructure\Persistence\Doctrine\ProfileRepository;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: ProfileRepository::class)]

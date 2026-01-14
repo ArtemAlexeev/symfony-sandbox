@@ -3,7 +3,7 @@
 namespace App\Domain\Entity;
 
 use App\Domain\Enum\User\ReactionType;
-use App\Repository\Domain\Entity\UserReactionRepository;
+use App\Infrastructure\Persistence\Doctrine\UserReactionRepository;
 use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 

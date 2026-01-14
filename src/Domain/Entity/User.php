@@ -3,7 +3,7 @@
 namespace App\Domain\Entity;
 
 use App\Entity\App\Doctrine\Entity\UserReaction2;
-use App\Infrastructure\Repository\UserRepository;
+use App\Infrastructure\Persistence\Doctrine\UserRepository;
 use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;

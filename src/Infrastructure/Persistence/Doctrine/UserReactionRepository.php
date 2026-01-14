@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Repository\Domain\Entity;
+namespace App\Infrastructure\Persistence\Doctrine;
 
 use App\Domain\Entity\UserReaction;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
