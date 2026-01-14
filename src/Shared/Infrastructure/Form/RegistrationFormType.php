@@ -2,7 +2,7 @@
 
 namespace App\Shared\Infrastructure\Form;
 
-use App\User\Domain\Entity\User;
+use App\Domain\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;

@@ -1,8 +1,12 @@
 <?php
 
-namespace App\User\Domain\Entity;
+namespace App\Domain\Entity;
 
-use App\User\Infrastructure\Repository\UserRepository;
+use App\Entity\App\Doctrine\Entity\UserReaction2;
+use App\Infrastructure\Repository\UserRepository;
+use DateTimeImmutable;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -35,6 +39,27 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column]
     private bool $isVerified = false;
+
+    #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
+    private ?Profile $profile = null;
+
+    // Reactions this user has SENT
+    #[ORM\OneToMany(targetEntity: UserReaction::class, mappedBy: 'user')]
+    private Collection $userReactions;
+
+    // Reactions this user has RECEIVED
+    #[ORM\OneToMany(targetEntity: UserReaction::class, mappedBy: 'targetUser')]
+    private Collection $userRetrievedReactions;
+
+    #[ORM\Column]
+    private DateTimeImmutable $createdAt;
+
+    public function __construct()
+    {
+        $this->userReactions = new ArrayCollection();
+        $this->userRetrievedReactions = new ArrayCollection();
+        $this->createdAt = new DateTimeImmutable();
+    }
 
     public function getId(): ?int
     {
@@ -127,5 +152,39 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->isVerified = $isVerified;
 
         return $this;
+    }
+
+    public function getProfile(): ?Profile
+    {
+        return $this->profile;
+    }
+
+    public function setProfile(Profile $profile): static
+    {
+        // set the owning side of the relation if necessary
+        if ($profile->getUser() !== $this) {
+            $profile->setUser($this);
+        }
+
+        $this->profile = $profile;
+
+        return $this;
+    }
+
+    /** @return Collection<int, UserReaction> */
+    public function getUserReactions(): Collection
+    {
+        return $this->userReactions;
+    }
+
+    /** @return Collection<int, UserReaction> */
+    public function getUserRetrievedReactions(): Collection
+    {
+        return $this->userRetrievedReactions;
+    }
+
+    public function getCreatedAt(): \DateTimeImmutable
+    {
+        return $this->createdAt;
     }
 }
