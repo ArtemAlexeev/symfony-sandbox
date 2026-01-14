@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Controller;
+namespace App\Shared\Infrastructure\Rest\Controller;
 
-use App\Entity\User;
-use App\Form\RegistrationFormType;
-use App\Security\AppAuthenticator;
-use App\Security\EmailVerifier;
+use App\Shared\Infrastructure\Form\RegistrationFormType;
+use App\Shared\Infrastructure\Security\AppAuthenticator;
+use App\Shared\Infrastructure\Security\EmailVerifier;
+use App\User\Domain\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Twig\Mime\TemplatedEmail;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -46,7 +46,7 @@ class RegistrationController extends AbstractController
                     ->from(new Address('my@badoo-clone.xyz', 'Mail Bot name'))
                     ->to((string) $user->getEmail())
                     ->subject('Please Confirm your Email')
-                    ->htmlTemplate('registration/confirmation_email.html.twig')
+                    ->htmlTemplate('shared/registration/confirmation_email.html.twig')
             );
 
             // do anything else you need here, like send an email
@@ -54,7 +54,7 @@ class RegistrationController extends AbstractController
             return $security->login($user, AppAuthenticator::class, 'main');
         }
 
-        return $this->render('registration/register.html.twig', [
+        return $this->render('shared/registration/register.html.twig', [
             'registrationForm' => $form,
         ]);
     }

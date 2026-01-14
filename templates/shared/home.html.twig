@@ -1,4 +1,4 @@
-{% extends 'base.html.twig' %}
+{% extends 'shared/base.html.twig' %}
 
 {% block title %}Home{% endblock %}
 
@@ -18,7 +18,7 @@
         {% if app.user %}
           <a href="{{ path('app_logout') }}">Logout</a>
           <br>
-          <a href="{{ path('profile') }}">Profile</a>
+         <!-- <a href="path('profile')">Profile</a> -->
         {% else %}
             <a href="{{ path('app_login') }}">Login</a>
             </br>

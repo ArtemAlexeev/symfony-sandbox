@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Shared\Infrastructure\Rest\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -8,9 +8,9 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class HomeController extends AbstractController
 {
-    #[Route('/home', name: 'home', methods: ['GET'])]
+    #[Route('/', name: 'home', methods: ['GET'])]
     public function index(): Response
     {
-        return $this->render('home.html.twig');
+        return $this->render('shared/home.html.twig');
     }
 }

@@ -7,6 +7,6 @@
 # To list all registered routes, run the following command:
 #   bin/console debug:router
 
-controllers:
-    resource: ../src/Controller/
+user_controllers:
+    resource: ../src/Shared/Infrastructure/Rest/Controller/
     type: attribute

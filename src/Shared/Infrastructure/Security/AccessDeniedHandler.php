@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Security;
+namespace App\Shared\Infrastructure\Security;
 
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Http\Authorization\AccessDeniedHandlerInterface;
-use Symfony\Bundle\SecurityBundle\Security;
 
 class AccessDeniedHandler implements AccessDeniedHandlerInterface
 {
