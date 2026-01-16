@@ -7,6 +7,7 @@ use ReflectionClass;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
+use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
 
 class ExceptionSubscriber implements EventSubscriberInterface
@@ -22,6 +23,17 @@ class ExceptionSubscriber implements EventSubscriberInterface
     public function onKernelException(ExceptionEvent $event): void
     {
         $exception = $event->getThrowable();
+
+        if ($exception instanceof UnprocessableEntityHttpException) {
+            $response = new JsonResponse([
+                'error' => [
+                    'message' => $exception->getMessage(),
+                    'type' => (new ReflectionClass($exception))->getShortName(),
+                ]
+            ], $exception->getCode() ?: 400);
+
+            $event->setResponse($response);
+        }
 
         // We only want to handle our custom Domain Exceptions
         if (!$exception instanceof DomainException) {

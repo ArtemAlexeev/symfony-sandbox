@@ -4,8 +4,11 @@ namespace App\Domain\Entity;
 
 use App\Domain\Enum\User\Gender;
 use App\Domain\Enum\User\Status;
+use App\Domain\Exceptions\UserMustBeAboveMinYearsOldException;
+use App\Domain\ValueObject\Age;
 use App\Infrastructure\Persistence\Doctrine\ProfileRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Ignore;
 
 #[ORM\Entity(repositoryClass: ProfileRepository::class)]
 class Profile
@@ -36,9 +39,15 @@ class Profile
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $avatar = null;
 
+    #[Ignore]
     #[ORM\OneToOne(inversedBy: 'profile', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
-    private ?User $user = null;
+    private User $user;
+
+    public function __construct(User $user)
+    {
+        $this->user = $user;
+    }
 
     public function getId(): ?int
     {
@@ -50,23 +59,9 @@ class Profile
         return $this->firstName;
     }
 
-    public function setFirstName(?string $firstName): static
-    {
-        $this->firstName = $firstName;
-
-        return $this;
-    }
-
     public function getLastName(): ?string
     {
         return $this->lastName;
-    }
-
-    public function setLastName(?string $lastName): static
-    {
-        $this->lastName = $lastName;
-
-        return $this;
     }
 
     public function getAge(): ?int
@@ -74,35 +69,19 @@ class Profile
         return $this->age;
     }
 
-    public function setAge(?int $age): static
+    public function getGender(): ?Gender
     {
-        $this->age = $age;
-
-        return $this;
+        return $this->gender; //return enum and not string
     }
 
-    public function getGender(): ?string
-    {
-        return $this->gender;
-    }
-
-    public function setGender(?Gender $gender): static
-    {
-        $this->gender = $gender;
-
-        return $this;
-    }
-
-    public function getStatus(): ?string
+    public function getStatus(): ?Status
     {
         return $this->status;
     }
 
-    public function setStatus(?Status $status): static
+    public function getStatusLabel(): ?string
     {
-        $this->status = $status;
-
-        return $this;
+        return $this->status->label();
     }
 
     public function getDescription(): ?string
@@ -110,34 +89,43 @@ class Profile
         return $this->description;
     }
 
-    public function setDescription(?string $description): static
-    {
-        $this->description = $description;
-
-        return $this;
-    }
-
     public function getAvatar(): ?string
     {
         return $this->avatar;
     }
 
-    public function setAvatar(?string $avatar): static
-    {
-        $this->avatar = $avatar;
-
-        return $this;
-    }
-
-    public function getUser(): ?User
+    public function getUser(): User
     {
         return $this->user;
     }
 
-    public function setUser(User $user): static
+    public function getUserId(): int
     {
-        $this->user = $user;
+        return $this->getUser()->getId();
+    }
 
-        return $this;
+    /**
+     * @throws UserMustBeAboveMinYearsOldException
+     */
+    public function putDetails(
+        ?string $firstName,
+        ?string $lastName,
+        ?int $age,
+        ?Gender $gender,
+        ?Status $status,
+        ?string $description,
+        ?string $avatar,
+    ): void {
+        if ($age) {
+            $age = new Age($age);
+        }
+
+        $this->firstName = $firstName;
+        $this->lastName = $lastName;
+        $this->age = $age->getValue();
+        $this->gender = $gender;
+        $this->status = $status;
+        $this->description = $description;
+        $this->avatar = $avatar;
     }
 }

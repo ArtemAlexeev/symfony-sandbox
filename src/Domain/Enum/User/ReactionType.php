@@ -6,7 +6,7 @@ enum ReactionType: string
 {
     case LIKE = 'like';
     case DISLIKE = 'dislike';
-    case SUPERLIKE = 'superlike';
+    case SUPERLIKE = 'super';
 
     public function getLabel(): string
     {
@@ -15,5 +15,10 @@ enum ReactionType: string
             self::DISLIKE => 'Dislike',
             self::SUPERLIKE => 'Super Like',
         };
+    }
+
+    public static function values(): array
+    {
+        return array_column(self::cases(), 'value');
     }
 }

@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Recommendations for you{% endblock %}
+
+{% block body %}
+
+    <div class="cards" id="userCards"></div>
+    <div class="pagination" id="pagination"></div>
+
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('js/app.js') }}"></script>
+{% endblock %}

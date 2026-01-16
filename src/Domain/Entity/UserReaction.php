@@ -22,17 +22,17 @@ class UserReaction
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'userReactions')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?User $user = null;
+    private User $user;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'userRetrievedReactions')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?User $targetUser = null;
+    private User $targetUser;
 
     #[ORM\Column(type: 'string', length: 100, enumType: ReactionType::class)]
     private ReactionType $type;
 
     #[ORM\Column]
-    private ?DateTimeImmutable $createdAt = null;
+    private DateTimeImmutable $createdAt;
 
     public function getId(): ?int
     {
@@ -73,7 +73,7 @@ class UserReaction
         return $this;
     }
 
-    public function getCreatedAt(): ?DateTimeImmutable
+    public function getCreatedAt(): DateTimeImmutable
     {
         return $this->createdAt;
     }

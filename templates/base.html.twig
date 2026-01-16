@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Baddo Clone App{% endblock %}</title>
+
+    <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+</head>
+<body>
+
+<div class="app">
+
+    <!-- LEFT SIDEBAR -->
+    <aside class="sidebar">
+        <div class="logo">Badoo Clon APP</div>
+
+        <div class="user-info">
+            <img src="{{ asset('images/' ~ profile.avatar) }}" class="user-avatar">
+            <div>
+                <div class="user-name">{{ profile.firstName }} {{ profile.lastName }}</div>
+                <div class="user-age">{{ profile.age }}</div>
+            </div>
+        </div>
+
+        <hr class="separator">
+
+        <nav class="menu">
+            <a href="#">Messages</a>
+            <a href="#">Liked you</a>
+            <a href="#">Visitors</a>
+        </nav>
+    </aside>
+
+    <!-- RIGHT CONTENT -->
+    <main class="content">
+        {% block body %}{% endblock %}
+    </main>
+
+</div>
+
+{% block javascripts %}{% endblock %}
+</body>
+</html>

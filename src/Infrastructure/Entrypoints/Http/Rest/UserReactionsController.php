@@ -5,16 +5,16 @@ namespace App\Infrastructure\Entrypoints\Http\Rest;
 use App\Application\Command\ReactToUserCommand;
 use App\Application\CommandHandler\ReactToUserHandler;
 use App\Application\DTO\ReactToUserDTO;
+use App\Infrastructure\Entrypoints\Http\BaseController;
 use Exception;
 use Psr\Log\LoggerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
-use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/reactions', name: 'api_reactions_')]
-class UserReactionsController extends AbstractController
+class UserReactionsController extends BaseController
 {
     #[Route('', name: 'create', methods: ['POST'])]
     public function create(
@@ -22,8 +22,7 @@ class UserReactionsController extends AbstractController
         ReactToUserDTO $dto,
         ReactToUserHandler $handler,
         LoggerInterface $logger
-    ): JsonResponse
-    {
+    ): JsonResponse {
         try {
             $command = new ReactToUserCommand($this->getUser(), $dto);
             $handler->handle($command);

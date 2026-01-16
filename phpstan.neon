@@ -1,0 +1,43 @@
+includes:
+    - vendor/phpstan/phpstan-symfony/extension.neon
+    - vendor/phpstan/phpstan-symfony/rules.neon
+    - vendor/phpstan/phpstan-doctrine/extension.neon
+    - vendor/phpstan/phpstan-doctrine/rules.neon
+
+parameters:
+    level: 7
+
+    paths:
+        - src
+        - tests
+
+    phpVersion: 80400
+
+    bootstrapFiles:
+        - vendor/autoload.php
+
+    # Modern PHPStan uses only these typehint checks:
+    checkMissingTypehints: true
+    checkMissingCallableSignature: true
+
+    reportUnmatchedIgnoredErrors: true
+
+    symfony:
+        containerXmlPath: var/cache/dev/App_KernelDevDebugContainer.xml
+        # console_application is no longer supported → removed
+
+    doctrine:
+        # Optional: only if you have a loader
+        # objectManagerLoader: tests/bootstrap.php
+
+    universalObjectCratesClasses:
+        - Doctrine\Common\Collections\ArrayCollection
+        - Doctrine\Common\Collections\Collection
+
+    ignoreErrors:
+        -
+            message: '#Call to an undefined method Symfony\\Component\\DependencyInjection\\ContainerInterface::get#'
+            path: src
+        -
+            message: '#Call to an undefined method Doctrine\\ORM\\EntityManagerInterface::getRepository#'
+            path: src

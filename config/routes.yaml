@@ -15,3 +15,7 @@ app_rest:
     resource: ../src/Infrastructure/EntryPoints/Http/Rest
     type: attribute
     prefix: /api
+
+app_web:
+    resource: ../src/Infrastructure/EntryPoints/Http/Web
+    type: attribute
