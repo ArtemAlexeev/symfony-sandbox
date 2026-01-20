@@ -7,6 +7,15 @@
 # To list all registered routes, run the following command:
 #   bin/console debug:router
 
-controllers:
-    resource: ../src/Controller/
+shared_web:
+    resource: ../src/Shared/Infrastructure/EntryPoints/Http/Web/
+    type: attribute
+
+app_rest:
+    resource: ../src/Infrastructure/EntryPoints/Http/Rest
+    type: attribute
+    prefix: /api
+
+app_web:
+    resource: ../src/Infrastructure/EntryPoints/Http/Web
     type: attribute
