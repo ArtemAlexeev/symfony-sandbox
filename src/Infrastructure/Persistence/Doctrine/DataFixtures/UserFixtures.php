@@ -6,6 +6,7 @@ use App\Domain\Entity\Profile;
 use App\Domain\Entity\User;
 use App\Domain\Enum\User\Gender;
 use App\Domain\Enum\User\Status;
+use App\Domain\ValueObject\Age;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Exception;
@@ -39,7 +40,7 @@ class UserFixtures extends Fixture
                 $profile->putDetails(
                     $firstName,
                     $faker->lastName(),
-                    $faker->numberBetween(18, 70),
+                    new Age($faker->numberBetween(18, 70)),
                     $gender,
                     $statuses[array_rand($statuses)],
                     $faker->paragraph(),

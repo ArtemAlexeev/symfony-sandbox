@@ -10,6 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
@@ -22,6 +23,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private int $id;
 
     #[ORM\Column(length: 180)]
+    #[NotBlank]
     private string $email;
 
     /**
@@ -43,10 +45,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?Profile $profile = null;
 
     // Reactions this user has SENT
+    /**
+     * @var Collection<int, UserReaction>
+     */
     #[ORM\OneToMany(targetEntity: UserReaction::class, mappedBy: 'user')]
     private Collection $userReactions;
 
     // Reactions this user has RECEIVED
+    /**
+     * @var Collection<int, UserReaction>
+     */
     #[ORM\OneToMany(targetEntity: UserReaction::class, mappedBy: 'targetUser')]
     private Collection $userRetrievedReactions;
 
@@ -84,7 +92,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function getUserIdentifier(): string
     {
-        return (string) $this->email;
+        assert($this->email !== '');
+        return $this->email;
     }
 
     /**
@@ -160,11 +169,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function setProfile(Profile $profile): static
     {
-        // set the owning side of the relation if necessary
-        if ($profile->getUser() !== $this) {
-            $profile->setUser($this);
-        }
-
         $this->profile = $profile;
 
         return $this;

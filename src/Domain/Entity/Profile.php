@@ -4,7 +4,6 @@ namespace App\Domain\Entity;
 
 use App\Domain\Enum\User\Gender;
 use App\Domain\Enum\User\Status;
-use App\Domain\Exceptions\UserMustBeAboveMinYearsOldException;
 use App\Domain\ValueObject\Age;
 use App\Infrastructure\Persistence\Doctrine\ProfileRepository;
 use Doctrine\ORM\Mapping as ORM;
@@ -24,8 +23,8 @@ class Profile
     #[ORM\Column(length: 100, nullable: true)]
     private ?string $lastName = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?int $age = null;
+    #[ORM\Embedded(class: Age::class, columnPrefix: false)]
+    private Age $age;
 
     #[ORM\Column(length: 10, nullable: true, enumType: Gender::class)]
     private ?Gender $gender = null;
@@ -47,6 +46,7 @@ class Profile
     public function __construct(User $user)
     {
         $this->user = $user;
+        $this->age = new Age(null);
     }
 
     public function getId(): ?int
@@ -64,7 +64,7 @@ class Profile
         return $this->lastName;
     }
 
-    public function getAge(): ?int
+    public function getAge(): ?Age
     {
         return $this->age;
     }
@@ -104,25 +104,18 @@ class Profile
         return $this->getUser()->getId();
     }
 
-    /**
-     * @throws UserMustBeAboveMinYearsOldException
-     */
     public function putDetails(
         ?string $firstName,
         ?string $lastName,
-        ?int $age,
+        Age $age,
         ?Gender $gender,
         ?Status $status,
         ?string $description,
         ?string $avatar,
     ): void {
-        if ($age) {
-            $age = new Age($age);
-        }
-
         $this->firstName = $firstName;
         $this->lastName = $lastName;
-        $this->age = $age->getValue();
+        $this->age = $age;
         $this->gender = $gender;
         $this->status = $status;
         $this->description = $description;

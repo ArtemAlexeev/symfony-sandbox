@@ -23,8 +23,7 @@ class CreateProfileSubscriber implements EventSubscriberInterface
 
     public function onUserRegistered(UserRegisteredEvent $event): void
     {
-        $profile = new Profile();
-        $profile->setUser($event->user);
+        $profile = new Profile($event->user);
         $this->entityManager->persist($profile);
         $this->entityManager->flush();
     }

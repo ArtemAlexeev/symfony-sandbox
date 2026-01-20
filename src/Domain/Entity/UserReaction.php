@@ -78,11 +78,9 @@ class UserReaction
         return $this->createdAt;
     }
 
-    #[ORM\PrePersist] // <--- This runs automatically on "persist"
+    #[ORM\PrePersist]
     public function setCreatedAtValue(): void
     {
-        if ($this->createdAt === null) {
-            $this->createdAt = new DateTimeImmutable();
-        }
+        $this->createdAt = new DateTimeImmutable();
     }
 }

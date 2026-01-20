@@ -33,11 +33,3 @@ parameters:
     universalObjectCratesClasses:
         - Doctrine\Common\Collections\ArrayCollection
         - Doctrine\Common\Collections\Collection
-
-    ignoreErrors:
-        -
-            message: '#Call to an undefined method Symfony\\Component\\DependencyInjection\\ContainerInterface::get#'
-            path: src
-        -
-            message: '#Call to an undefined method Doctrine\\ORM\\EntityManagerInterface::getRepository#'
-            path: src
