@@ -1,0 +1,4 @@
+framework:
+    lock: # '%env(LOCK_DSN)%'
+        resources:
+            default: 'flock'

@@ -3,11 +3,12 @@
 namespace App\Infrastructure\Entrypoints\Http\Rest;
 
 use App\Infrastructure\Entrypoints\Http\BaseController;
+use OpenApi\Attributes as OA;
 use App\Infrastructure\Persistence\Doctrine\ProfileRepository;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Attribute\Route;
 
-
+#[OA\Tag(name: 'User Recommendations')]
 #[Route('/recs', name: 'api_recs_')]
 class RecsController extends BaseController
 {

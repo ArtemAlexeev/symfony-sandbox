@@ -4,12 +4,14 @@ namespace App\Domain\Entity;
 
 use App\Infrastructure\Persistence\Doctrine\UserRepository;
 use DateTimeImmutable;
+use Deprecated;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Serializer\Attribute\Ignore;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
@@ -29,19 +31,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var list<string> The user roles
      */
+    #[Ignore]
     #[ORM\Column]
     private array $roles = [];
 
     /**
      * @var string The hashed password
      */
+    #[Ignore]
     #[ORM\Column]
     private string $password;
 
+    #[Ignore]
     #[ORM\Column]
     private bool $isVerified = false;
 
-    #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(mappedBy: 'user', cascade: ['persist', 'remove'], fetch: 'EAGER')]
     private ?Profile $profile = null;
 
     // Reactions this user has SENT
@@ -144,7 +149,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $data;
     }
 
-    #[\Deprecated]
+    #[Deprecated]
     public function eraseCredentials(): void
     {
         // @deprecated, to be removed when upgrading to Symfony 8
