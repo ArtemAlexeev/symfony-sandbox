@@ -13,6 +13,8 @@ use Symfony\Component\Security\Core\User\UserInterface;
  */
 class ProfileRepository extends ServiceEntityRepository
 {
+    private const LIMIT = 8;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Profile::class);
@@ -22,16 +24,25 @@ class ProfileRepository extends ServiceEntityRepository
      * @param User $user
      * @return Profile[] Returns an array of Profile objects
      */
-    public function findRecs(UserInterface $user): array
+    public function findRecs(UserInterface $user, int $page = 1): array
     {
         $gender = $user->getProfile()->getGender();
+        $offset = ($page - 1) * self::LIMIT;
 
         return $this->createQueryBuilder('profile')
+            ->leftJoin(
+                'App\Domain\Entity\UserReaction',
+                'ur',
+                'WITH',
+                'ur.targetUser = profile.user AND ur.user = :user'
+            )
             ->where('profile.gender != :gender')
             ->andWhere('profile.user != :user')
+            ->andWhere('ur.id IS NULL')
             ->setParameter('gender', $gender)
             ->setParameter('user', $user)
-            ->setMaxResults(8)
+            ->setFirstResult($offset)
+            ->setMaxResults(self::LIMIT)
             ->getQuery()
             ->getResult();
     }

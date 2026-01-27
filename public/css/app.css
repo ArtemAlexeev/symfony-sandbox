@@ -144,3 +144,12 @@ body {
     background: #4da6ff;
     color: white;
 }
+.like-clicked {
+    background: #fbbcbd;
+}
+.super-clicked {
+    background: #cce5ff;
+}
+.dislike-clicked {
+    background: #e0e0e0;
+}

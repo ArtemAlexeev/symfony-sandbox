@@ -25,7 +25,7 @@ class ReactToUserHandler
     }
 
     /**
-     * @throws Exception
+     * @throws Exception|InvalidArgumentException
      */
     public function __invoke(ReactToUserCommand $command): void
     {
