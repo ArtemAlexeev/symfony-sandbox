@@ -7,6 +7,12 @@ framework:
     serializer:
         name_converter: 'serializer.name_converter.camel_case_to_snake_case'
 
+    rate_limiter:
+        user_reactions_command:
+            policy: 'fixed_window'
+            limit: 1
+            interval: '10 seconds'
+
     #esi: true
     #fragments: true
 

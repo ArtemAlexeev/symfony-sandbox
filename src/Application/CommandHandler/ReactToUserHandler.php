@@ -5,41 +5,85 @@ namespace App\Application\CommandHandler;
 use App\Application\Command\ReactToUserCommand;
 use App\Domain\Entity\UserReaction;
 use App\Domain\Enum\User\ReactionType;
-use App\Domain\Exceptions\SelfReactionException;
-use App\Domain\Exceptions\UserNotFoundException;
+use App\Infrastructure\Cache\UserReactionsStoringCache;
 use App\Infrastructure\Persistence\Doctrine\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
+use Psr\Cache\InvalidArgumentException;
+use Psr\Log\LoggerInterface;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
+#[AsMessageHandler]
 class ReactToUserHandler
 {
     public function __construct(
         private EntityManagerInterface $entityManager,
-        private UserRepository $userRepository
+        private UserRepository $userRepository,
+        private LoggerInterface $logger,
+        private UserReactionsStoringCache $reactionsStoringCache
     ) {
     }
 
     /**
-     * @throws UserNotFoundException
-     * @throws SelfReactionException
+     * @throws Exception
      */
-    public function handle(ReactToUserCommand $command): void
+    public function __invoke(ReactToUserCommand $command): void
     {
-        $targetUser = $this->userRepository->find($command->dto->targetUserId);
+        try {
+            $this->process($command);
+        } catch (Exception $e) {
+            $this->logger->error("Error processing ReactToUserCommand", ['exception' => $e]);
+        }
+    }
 
-        if (!$targetUser) {
-            throw new UserNotFoundException($command->dto->targetUserId);
+    /**
+     * @throws InvalidArgumentException
+     */
+    private function process(ReactToUserCommand $command): void
+    {
+        $reactions = $this->reactionsStoringCache->get($command->userId);
+
+        if (empty($reactions) ) {
+            $this->logger->warning('ReactToUserCommand - No reactions found in cache', ['userId' => $command->userId]);
+            return;
         }
 
-        if ($command->user->getId() === $targetUser->getId()) {
-            throw new SelfReactionException();
+        $uniqueReactions = [];
+        foreach ($reactions as $reaction) {
+            $uniqueReactions[$reaction->targetUserId] = ReactionType::from($reaction->type);
         }
 
-        $reaction = new UserReaction();
-        $reaction->setUser($command->user);
-        $reaction->setTargetUser($targetUser);
-        $reaction->setType(ReactionType::from($command->dto->type));
+        $user = $this->userRepository->find($command->userId);
 
-        $this->entityManager->persist($reaction);
+        if (!$user) {
+            throw new Exception("ReactToUserCommand - User not found " . $command->userId);
+        }
+
+        $this->reactionsStoringCache->delete($command->userId);
+
+        foreach ($uniqueReactions as $targetUserId => $reactionType) {
+            $targetUser = $this->userRepository->find($targetUserId);
+            if (!$targetUser) {
+                $this->logger->warning(
+                    "ReactToUserCommand - Target user not found", ['targetUserId' => $targetUserId]
+                );
+                continue;
+            }
+
+            if ($user->getId() === $targetUser->getId()) {
+                $this->logger->warning(
+                    "ReactToUserCommand - Target user equals to user", ['targetUserId' => $targetUserId]
+                );
+                continue;
+            }
+
+            $reaction = new UserReaction();
+            $reaction->setUser($user);
+            $reaction->setTargetUser($targetUser);
+            $reaction->setType($reactionType);
+            $this->entityManager->persist($reaction);
+        }
+
         $this->entityManager->flush();
     }
 }

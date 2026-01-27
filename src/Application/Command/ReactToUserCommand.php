@@ -5,10 +5,9 @@ namespace App\Application\Command;
 use App\Application\DTO\ReactToUserDTO;
 use App\Domain\Entity\User;
 
-readonly class ReactToUserCommand
+readonly class ReactToUserCommand implements AsyncCommandInterface
 {
     public function __construct(
-        public User $user,
-        public ReactToUserDTO $dto
+        public int $userId,
     ) {}
 }
