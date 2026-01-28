@@ -25,18 +25,19 @@ body {
     font-size: 24px;
     font-weight: bold;
     margin-bottom: 20px;
+    color: white;
+    background: #f900ffba;
+    border-radius: 5px;
 }
 
 .user-info {
-    display: flex;
-    align-items: center;
-    gap: 10px;
     margin-bottom: 20px;
+    text-align: center;
 }
 
 .user-avatar {
-    width: 50px;
-    height: 50px;
+    width: 150px;
+    height: 150px;
     border-radius: 50%;
 }
 
@@ -44,6 +45,10 @@ body {
     font-weight: bold;
 }
 
+.user-detaisl {
+    text-align: center;
+    padding-top: 10px;
+}
 .user-age {
     font-size: 12px;
     color: #777;
@@ -152,4 +157,8 @@ body {
 }
 .dislike-clicked {
     background: #e0e0e0;
+}
+
+.menu .red-text {
+    color: red;
 }

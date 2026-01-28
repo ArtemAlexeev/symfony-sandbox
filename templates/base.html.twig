@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>{% block title %}Baddo Clone App{% endblock %}</title>
+    <title>{% block title %}Dream date App{% endblock %}</title>
 
     <link rel="stylesheet" href="{{ asset('css/app.css') }}">
 </head>
@@ -12,22 +12,27 @@
 
     <!-- LEFT SIDEBAR -->
     <aside class="sidebar">
-        <div class="logo">Badoo Clon APP</div>
+        <div class="logo">Dream date App</div>
 
         <div class="user-info">
-            <img src="{{ asset('images/' ~ profile.avatar) }}" class="user-avatar">
-            <div>
-                <div class="user-name">{{ profile.firstName }} {{ profile.lastName }}</div>
-                <div class="user-age">{{ profile.age }}</div>
+            <div><img src="{{ asset('images/' ~ profile.avatar) }}" class="user-avatar"></div>
+            <div class="user-details">
+                <div class="user-name">{{ profile.firstName }} {{ profile.lastName }}, {{ profile.age }}</div>
             </div>
         </div>
 
         <hr class="separator">
 
         <nav class="menu">
-            <a href="#">Messages</a>
-            <a href="#">Liked you</a>
-            <a href="#">Visitors</a>
+            <a href="/profile">Edit profile</a>
+            <a href="/messages">Messages</a>
+            <a href="/likes" class="red-text">❤ Likes</a>
+            <a href="/settings">Settings</a>
+        </nav>
+        <hr class="separator">
+
+        <nav class="menu">
+            <a href="/logout">Log out</a>
         </nav>
     </aside>
 
