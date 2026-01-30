@@ -2,6 +2,8 @@
 
 namespace App\Infrastructure\EventListener;
 
+use App\Domain\Exceptions\DomainException;
+use InvalidArgumentException;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -26,29 +28,20 @@ final readonly class ApiExceptionListener
         $exception = $event->getThrowable();
         $request = $event->getRequest();
 
-        // 1. Check if this is an API request (optional)
-        // You can check the path, or the 'Accept' header.
-        if (!str_starts_with($request->getPathInfo(), '/api') &&
-            !str_starts_with($request->getPathInfo(), '/user')) {
+        if (!str_starts_with($request->getPathInfo(), '/api')) {
             return;
         }
 
-        // 2. Determine Status Code
         if ($exception instanceof HttpExceptionInterface) {
-            // Handles 404 Not Found, 403 Forbidden, etc. automatically
             $statusCode = $exception->getStatusCode();
-        } elseif ($exception instanceof \InvalidArgumentException) {
-            // Map standard PHP exceptions to 400 if you want
+        } elseif ($exception instanceof InvalidArgumentException) {
             $statusCode = Response::HTTP_BAD_REQUEST;
-        } elseif ($exception instanceof \DomainException) {
-            // Map your custom DDD Domain Exceptions to 400 or 422
+        } elseif ($exception instanceof DomainException) {
             $statusCode = Response::HTTP_UNPROCESSABLE_ENTITY;
         } else {
-            // Default to 500 for everything else
             $statusCode = Response::HTTP_INTERNAL_SERVER_ERROR;
         }
 
-        // 3. Prepare the Response Data
         $data = [
             'status' => $statusCode,
             'error' => $statusCode === 500 ? 'Internal Server Error' : $exception->getMessage(),
@@ -62,25 +55,21 @@ final readonly class ApiExceptionListener
                     $violations[$violation->getPropertyPath()] = $violation->getMessage();
                 }
 
-                // Override the generic message with specific fields
                 $data['violations'] = $violations;
             }
         }
 
-        // Add debug info if we are in dev mode (and it's not a production 500 error)
         if ($this->isDebug) {
             $data['trace'] = $exception->getTraceAsString();
             $data['class'] = get_class($exception);
         }
 
-        // 4. Log 500 errors (Critical)
         if ($statusCode >= 500) {
             $this->logger->critical($exception->getMessage(), [
                 'trace' => $exception->getTraceAsString(),
             ]);
         }
 
-        // 5. Send the Response
         $event->setResponse(new JsonResponse($data, $statusCode));
     }
 }
