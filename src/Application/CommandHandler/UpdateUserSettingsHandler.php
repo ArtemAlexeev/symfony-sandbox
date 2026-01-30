@@ -8,7 +8,9 @@ use App\Domain\Enum\User\Language;
 use App\Infrastructure\Persistence\Doctrine\UserSettingsRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
+#[AsMessageHandler]
 class UpdateUserSettingsHandler
 {
     public function __construct(
@@ -20,11 +22,13 @@ class UpdateUserSettingsHandler
     /**
      * @throws Exception
      */
-    public function handle(UpdateUserSettingsCommand $command): UserSettings
+    public function __invoke(UpdateUserSettingsCommand $command): UserSettings
     {
         $settings = $this->userSettingsRepository->findOneByUser($command->user);
         if (!$settings) {
-            throw new Exception('User settings does not exist');
+            $settings = new UserSettings($command->user);
+            $this->entityManager->persist($settings);
+            $this->entityManager->flush();
         }
         $dto = $command->dto;
 

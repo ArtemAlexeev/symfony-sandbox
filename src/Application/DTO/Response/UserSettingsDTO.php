@@ -3,6 +3,7 @@
 namespace App\Application\DTO\Response;
 
 use App\Domain\Entity\UserSettings;
+use App\Domain\Enum\User\Language;
 
 readonly class UserSettingsDTO
 {
@@ -13,12 +14,12 @@ readonly class UserSettingsDTO
     ) {
     }
 
-    public static function fromEntity(UserSettings $settings): self
+    public static function fromEntity(?UserSettings $settings): self
     {
         return new self(
-            $settings->getPushEnabled(),
-            $settings->getEmailEnabled(),
-            $settings->getLanguage()->value,
+            $settings?->getPushEnabled() ?? false,
+            $settings?->getEmailEnabled() ?? false,
+            $settings?->getLanguage()->value ?? Language::English->value,
         );
     }
 }
