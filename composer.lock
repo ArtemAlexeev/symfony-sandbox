@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fa62d5ee7f0b02d18de0d19ddecd9229",
+    "content-hash": "78641397d8ed52008ca5f25eb1cfbd69",
     "packages": [
         {
             "name": "doctrine/collections",
@@ -6691,6 +6691,54 @@
     ],
     "packages-dev": [
         {
+            "name": "artemalexeev/systeminfo",
+            "version": "v1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ArtemAlexeev/systeminfo.git",
+                "reference": "92d6ca4bf050da3d550a24dea6d2dd84d9fd3e5b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ArtemAlexeev/systeminfo/zipball/92d6ca4bf050da3d550a24dea6d2dd84d9fd3e5b",
+                "reference": "92d6ca4bf050da3d550a24dea6d2dd84d9fd3e5b",
+                "shasum": ""
+            },
+            "require": {
+                "ext-zend-opcache": "*",
+                "php": ">=8.0"
+            },
+            "require-dev": {
+                "phpstan/phpstan": "^2.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "ArtemAlieksieiev\\SystemInfo\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Artem Alieksieiev",
+                    "email": "artemalieksieievpersonal1010@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Package shows system info of your PHP project",
+            "keywords": [
+                "Opcache"
+            ],
+            "support": {
+                "issues": "https://github.com/ArtemAlexeev/systeminfo/issues",
+                "source": "https://github.com/ArtemAlexeev/systeminfo/tree/v1.1.0"
+            },
+            "time": "2026-02-06T12:17:02+00:00"
+        },
+        {
             "name": "doctrine/data-fixtures",
             "version": "2.2.0",
             "source": {
@@ -8084,7 +8132,8 @@
     "platform": {
         "php": ">=8.2",
         "ext-ctype": "*",
-        "ext-iconv": "*"
+        "ext-iconv": "*",
+        "ext-zend-opcache": "*"
     },
     "platform-dev": {},
     "plugin-api-version": "2.6.0"
